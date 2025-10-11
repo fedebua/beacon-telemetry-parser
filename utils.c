@@ -42,10 +42,15 @@ long open_file(int argc, char* argv[], FILE** fp)
     return file_size;
 }
 
-void add_to_csv(const char* filename, const char* variable_name, double* values, size_t number)
+int add_to_csv(const char* filename, const char* variable_name, double* values, size_t number)
 {
     int i;
     FILE* fp = fopen(filename, "a");
+    if (fp == NULL) {
+        debug("Error opening file %s\n", filename);
+        return -EACCES;
+    }
+
     fprintf(fp, "%s,", variable_name);
     for(i = 0; i < number; i++)
     {
@@ -55,4 +60,5 @@ void add_to_csv(const char* filename, const char* variable_name, double* values,
             fprintf(fp, "%f,", values[i]);
     }
     fclose(fp);
+    return 0;
 }

@@ -6,10 +6,15 @@
 #include "common.h"
 
 #define TELEMETRY_FILEPATH ("telemetry.csv")
+#define SUN_VECTORX_TELEMETRY_NAME ("Sun Vector X")
+#define SUN_VECTORY_TELEMETRY_NAME ("Sun Vector Y")
+#define SUN_VECTORZ_TELEMETRY_NAME ("Sun Vector Z")
+#define CPU_TEMPERATURE_TELEMETRY_NAME ("CPU temperature")
 
 int main(int argc, char *argv[])
 {
     FILE *fp;
+    int ret;
     long file_size, number_of_telemetries;
     ssize_t telemetries_read;
     beacon_telemetry_t* telemetries;
@@ -57,16 +62,32 @@ int main(int argc, char *argv[])
     }
 
     remove(TELEMETRY_FILEPATH); // Try to remove. Do not care if it fails
+
+    // Load SUN VECTOR X values
     load_values_array(values, get_aocs_sunvectorX, telemetries, number_of_telemetries);
-    add_to_csv(TELEMETRY_FILEPATH, "Sun Vector X", values, number_of_telemetries);
+    ret = add_to_csv(TELEMETRY_FILEPATH, SUN_VECTORX_TELEMETRY_NAME, values, number_of_telemetries);
+    if(ret) // Continue the program at this point, it will just fail writing
+        debug("Error trying to write %s telemetry", SUN_VECTORX_TELEMETRY_NAME);
+
+    // Load SUN VECTOR Y values
     load_values_array(values, get_aocs_sunvectorY, telemetries, number_of_telemetries);
-    add_to_csv(TELEMETRY_FILEPATH, "Sun Vector Y", values, number_of_telemetries);
+    ret = add_to_csv(TELEMETRY_FILEPATH, SUN_VECTORY_TELEMETRY_NAME, values, number_of_telemetries);
+    if(ret) // Continue the program at this point, it will just fail writing
+        debug("Error trying to write %s telemetry", SUN_VECTORY_TELEMETRY_NAME);
+
+    // Load SUN VECTOR Z values
     load_values_array(values, get_aocs_sunvectorZ, telemetries, number_of_telemetries);
-    add_to_csv(TELEMETRY_FILEPATH, "Sun Vector Z", values, number_of_telemetries);
+    ret = add_to_csv(TELEMETRY_FILEPATH, SUN_VECTORZ_TELEMETRY_NAME, values, number_of_telemetries);
+    if(ret) // Continue the program at this point, it will just fail writing
+        debug("Error trying to write %s telemetry", SUN_VECTORZ_TELEMETRY_NAME);
 
+    // Load CPU temperature values
     load_values_array(values, get_thermal_CPU_C, telemetries, number_of_telemetries);
-    add_to_csv(TELEMETRY_FILEPATH, "CPU temperature", values, number_of_telemetries);
+    ret = add_to_csv(TELEMETRY_FILEPATH, CPU_TEMPERATURE_TELEMETRY_NAME, values, number_of_telemetries);
+    if(ret) // Continue the program at this point, it will just fail writing
+        debug("Error trying to write %s telemetry", CPU_TEMPERATURE_TELEMETRY_NAME);
 
+    // Cleanup
     free(values);
     free(telemetries);
     fclose(fp);
