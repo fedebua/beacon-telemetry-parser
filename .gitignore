@@ -1,0 +1,6 @@
+*.pdf
+*.bin
+*.o
+main
+.vscode*
+*.csv*
