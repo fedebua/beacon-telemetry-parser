@@ -135,7 +135,15 @@ typedef struct{
 
 #define TELEMETRY_SIZE (sizeof(beacon_telemetry_t))
 
+// Auxiliary functions
 ssize_t read_telemetries(FILE* fp, beacon_telemetry_t* telemetry, size_t num_telemetries);
+void load_values_array(double* values, double (*func_ptr)(beacon_telemetry_t*), beacon_telemetry_t* telemetry, long number_of_telemetries);
+// Functions for getting each of the specific values
 double get_thermal_CPU_C(beacon_telemetry_t* telemetry);
+double get_aocs_sunvectorX(beacon_telemetry_t* telemetry);
+double get_aocs_sunvectorY(beacon_telemetry_t* telemetry);
+double get_aocs_sunvectorZ(beacon_telemetry_t* telemetry);
+
+
 
 #endif /* TELEMETRY_PARSER_H */
