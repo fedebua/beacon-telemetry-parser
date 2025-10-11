@@ -22,4 +22,9 @@ The goal is to extract and export the **solar sensor readings (X, Y, Z)** and co
   - Solar sensors X, Y, Z
   - CPU temperature (for decoding validation)
 - Writes results to a **CSV (comma-separated)** text file for plotting in LibreOffice Calc, Excel, etc.
-- Ensures values are correctly ordered and within valid ranges (−1 to 1 for sun sensors, ~26°C for CPU).
+
+## Results
+
+The following results were obtained after graphing the results
+
+![Results](./telemetries.png "Graph results")
