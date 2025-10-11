@@ -2,34 +2,23 @@
 #include <stdlib.h>
 #include <errno.h>
 #include "parser.h"
+#include "common.h"
 
-size_t read_telemetry(int argc, char* argv[], FILE** fp, beacon_telemetry_t* telemetry)
+ssize_t read_telemetries(FILE* fp, beacon_telemetry_t* telemetry, size_t num_telemetries)
 {
-    // fp as argument for later closing it
-    // This function may have prints since the error management makes sense if reading from a file
-    // Even though, the return values can be used in an upper layer
-    size_t bytesRead;
-
-    // Check command-line arguments
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s <binary_file>\n", argv[0]);
-        return -EINVAL;
+    // Read N element of TELEMETRY_SIZE bytes
+    // This function may also print because it uses filesystem
+    size_t telemetries_read = fread(telemetry, TELEMETRY_SIZE, num_telemetries, fp);
+    if(telemetries_read != num_telemetries)
+    {
+        debug("Error reading telemetry. Returned %ld instead of expected %ld\n", telemetries_read, num_telemetries);
+        telemetries_read = -EIO;
     }
 
-    // Open the binary file
-    *fp = fopen(argv[1], "rb");
-    if (*fp == NULL) {
-        fprintf(stderr, "Error opening file");
-        return -EACCES;
-    }
+    return telemetries_read; // In case it is OK, return the amount of telemetries read
+}
 
-    // Read 1 element of TELEMETRY_SIZE bytes
-    bytesRead = fread(telemetry, 1, TELEMETRY_SIZE, *fp);
-    if (bytesRead == 0) {
-        fprintf(stderr, "No data read or file is empty.\n");
-        fclose(*fp);        
-        return -EBADF;
-    }
-
-    return bytesRead; // In case it is OK, return the amount of bytes read
+double get_thermal_CPU_C(beacon_telemetry_t* telemetry)
+{
+    return (double)(BE16(telemetry->thermal.CPU_C))/CPU_C_CT_DIV;
 }

@@ -123,8 +123,19 @@ typedef struct{
 // Finish the struct package indication for the compiler
 #pragma pack(pop)
 
+
+// In case arch is little endian, convert big endian into little endian
+#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+  #define BE16(x) __builtin_bswap16(x)
+  #define BE32(x) __builtin_bswap32(x)
+#else // Otherwise, return as it is
+  #define BE16(x) (x)
+  #define BE32(x) (x)
+#endif
+
 #define TELEMETRY_SIZE (sizeof(beacon_telemetry_t))
 
-size_t read_telemetry(int argc, char* argv[], FILE** fp, beacon_telemetry_t* telemetry);
+ssize_t read_telemetries(FILE* fp, beacon_telemetry_t* telemetry, size_t num_telemetries);
+double get_thermal_CPU_C(beacon_telemetry_t* telemetry);
 
 #endif /* TELEMETRY_PARSER_H */

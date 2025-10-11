@@ -1,5 +1,5 @@
 CC := gcc
-CFLAGS := -Wall
+CFLAGS := -Wall -DDEBUG_PRINTF
 TARGET := main
 
 # Automatically include all .c files in the directory
