@@ -5,13 +5,15 @@
 #include "utils.h"
 #include "common.h"
 
+#define TELEMETRY_FILEPATH ("telemetry.csv")
+
 int main(int argc, char *argv[])
 {
     FILE *fp;
     long file_size, number_of_telemetries;
     ssize_t telemetries_read;
-    int i;
     beacon_telemetry_t* telemetries;
+    double* values;
 
     // Open file and get its size
     file_size = open_file(argc, argv, &fp);
@@ -45,10 +47,27 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE; // messages managed inside
     }
 
-    for(i = 0; i < telemetries_read; i++)
-        printf("%f ", get_thermal_CPU_C(&telemetries[i]));
-    printf("\n");
+    values = malloc(number_of_telemetries*sizeof(double));
+    if(!values)
+    {
+        debug("Error allocating memory for values array\n");
+        free(telemetries);
+        fclose(fp);
+        return EXIT_FAILURE; // messages managed inside
+    }
 
+    remove(TELEMETRY_FILEPATH); // Try to remove. Do not care if it fails
+    load_values_array(values, get_aocs_sunvectorX, telemetries, number_of_telemetries);
+    add_to_csv(TELEMETRY_FILEPATH, "Sun Vector X", values, number_of_telemetries);
+    load_values_array(values, get_aocs_sunvectorY, telemetries, number_of_telemetries);
+    add_to_csv(TELEMETRY_FILEPATH, "Sun Vector Y", values, number_of_telemetries);
+    load_values_array(values, get_aocs_sunvectorZ, telemetries, number_of_telemetries);
+    add_to_csv(TELEMETRY_FILEPATH, "Sun Vector Z", values, number_of_telemetries);
+
+    load_values_array(values, get_thermal_CPU_C, telemetries, number_of_telemetries);
+    add_to_csv(TELEMETRY_FILEPATH, "CPU temperature", values, number_of_telemetries);
+
+    free(values);
     free(telemetries);
     fclose(fp);
     return EXIT_SUCCESS;
