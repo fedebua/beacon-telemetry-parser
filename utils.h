@@ -1,6 +1,7 @@
 #ifndef UTILS_H
 #define UTILS_H
 #include <stdlib.h>
+#include <stdio.h>
 
 long open_file(int argc, char* argv[], FILE** fp);
 int add_to_csv(const char* filename, const char* variable_name,  double* values, size_t number);

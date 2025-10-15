@@ -2,6 +2,8 @@
 #define TELEMETRY_PARSER_H
 
 #include <stdint.h>
+#include <stdio.h>
+#include <sys/types.h>
 
 // Indicate the compiler to pack structures in 1 bytes (to avoid empty offsets inside the full struct)
 #pragma pack(push, 1)
@@ -26,13 +28,11 @@ typedef struct{
     uint8_t antennaDeployStatus;
 }cdh_telemetry_t;
 
-typedef enum{
-    BATTERY_A_CT = 5237/1000,
-    PCM_3V3_V_CT = 3988/1000,
-    PCM_3V3_A_CT = 5237/1000,
-    PCM_5V_V_CT = 5865/1000,
-    PCM_5V_A_CT = 5237/1000,
-}power_telemetry_constants_t;
+#define BATTERY_A_CT (5237/1000),
+#define PCM_3V3_V_CT (3988/1000),
+#define PCM_3V3_A_CT (5237/1000),
+#define PCM_5V_V_CT (5865/1000),
+#define PCM_5V_A_CT (5237/1000),
 
 typedef struct{
     uint16_t power_id;
@@ -67,17 +67,17 @@ typedef enum{
     GYROX_DPS_CT_DIV = 80,
     GYROY_DPS_CT_DIV = 80,
     GYROZ_DPS_CT_DIV = 80,
-    TEMPERATURE_IMU_C_CT = (14/100),
     TEMPERATURE_IMU_C_OFF = 25,
-    FINE_GYROX_DPS_CT = (256/6300)/65536,
-    FINE_GYROY_DPS_CT = (256/6300)/65536,
-    FINE_GYROZ_DPS_CT = (256/6300)/65536,
-    WHEEL_1_RADSEC_CT = 3/10,
-    WHEEL_2_RADSEC_CT = 3/10,
-    WHEEL_3_RADSEC_CT = 3/10,
-    WHEEL_4_RADSEC_CT = 3/10,
-
 }aocs_telemetry_constants_t;
+
+#define TEMPERATURE_IMU_C_CT ((14/100))
+#define FINE_GYROX_DPS_CT ((256/6300)/65536)
+#define FINE_GYROY_DPS_CT ((256/6300)/65536)
+#define FINE_GYROZ_DPS_CT ((256/6300)/65536)
+#define WHEEL_1_RADSEC_CT (3/10)
+#define WHEEL_2_RADSEC_CT (3/10)
+#define WHEEL_3_RADSEC_CT (3/10)
+#define WHEEL_4_RADSEC_CT (3/10)
 
 typedef struct{
     uint16_t aocs_id;

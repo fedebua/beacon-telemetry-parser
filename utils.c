@@ -34,7 +34,7 @@ long open_file(int argc, char* argv[], FILE** fp)
     if (file_size < 0) {
         debug("Error telling file size");
         fclose(*fp);
-        return EBADF;
+        return -EBADF;
     }
 
     rewind(*fp);  // go back to beginning for later reads

@@ -21,7 +21,7 @@ ssize_t read_telemetries(FILE* fp, beacon_telemetry_t* telemetry, size_t num_tel
     if(telemetries_read != num_telemetries)
     {
         debug("Error reading telemetry. Returned %ld instead of expected %ld\n", telemetries_read, num_telemetries);
-        telemetries_read = -EIO;
+        return -EIO;
     }
 
     // sort telemetries in the previously read array
